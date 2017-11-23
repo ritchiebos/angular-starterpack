@@ -1,15 +1,1 @@
 /* You can add global styles to this file, and also import other style files */
-
-.navbar-nav>li>a,
-.navbar-brand,
-.navbar-text {
-  color: #cccccc;
-}
-
-.navbar-nav>li>a.active {
-  color: white;
-}
-
-.navbar {
-  border-radius: 0px;
-}
