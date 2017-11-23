@@ -22,7 +22,7 @@ import { RecipeService } from './recipes/recipe.service';
 import { RecipesComponent } from './recipes/recipes.component';
 import { RecipeCategoryListComponent } from './recipes/recipe-category-list/recipe-category-list.component';
 import { RecipeCategoryItemComponent } from './recipes/recipe-category-list/recipe-category-item/recipe-category-item.component';
-import { CommonModule } from '@angular/common/src/common_module';
+import {RecipeCategoryService} from './recipes/recipe-category-list/recipe-category.service';
 
 
 @NgModule({
@@ -48,7 +48,7 @@ import { CommonModule } from '@angular/common/src/common_module';
     HttpModule,
     AppRoutingModule
   ],
-  providers: [ShoppingListService, RecipeService],
+  providers: [ShoppingListService, RecipeService, RecipeCategoryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
