@@ -9,6 +9,9 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class RecipeService {
+
+  private apiUrl: string = "http://localhost:3000/api/v1/";
+
   recipesChanged = new Subject<Recipe[]>();
 
   private recipes: Recipe[] = [
@@ -38,7 +41,32 @@ export class RecipeService {
   }
 
   getRecipes() {
-    this.httpClient.get<Recipe[]>('https://jsonplaceholder.typicode.com/posts/1/comments', {
+    this.httpClient.get<Recipe[]>(this.apiUrl + 'categories', {
+      observe: 'body',
+      responseType: 'json'
+    })
+    .map(
+      (response) => {
+
+        console.warn(response);
+
+        for (let categorie of response) {
+          if (!categorie.recipes['ingredients']) {
+            categorie.recipes['ingredients'] = [];
+          }
+        }
+        return categorie.recipes;
+      }
+    )
+    .subscribe(
+      (recipes: Recipe[]) => {
+        this.setRecipes(recipes);
+      }
+    );
+  }
+
+  getRecipe(index: number) {
+    this.httpClient.get<Recipe[]>('https://jsonplaceholder.typicode.com/posts/' + index, {
       observe: 'body',
       responseType: 'json'
     })
@@ -55,12 +83,9 @@ export class RecipeService {
     .subscribe(
       (recipes: Recipe[]) => {
         this.setRecipes(recipes);
+        console.log( recipes);
       }
     );
-  }
-
-  getRecipe(index: number) {
-    return this.recipes[index];
   }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
