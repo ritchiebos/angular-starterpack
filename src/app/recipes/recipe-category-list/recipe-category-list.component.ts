@@ -1,20 +1,35 @@
 import {Component, OnInit} from '@angular/core';
-import {RecipeCategory} from './recipe-category.model';
-import {RecipeCategoryService} from './recipe-category.service';
+
+import { RecipeCategoryService } from '../recipe-category.service';
+import { RecipeCategory } from '../recipe-category.model';
+import { Subscription } from 'rxjs/Subscription';
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Component({
   selector: 'app-recipe-category-list',
   templateUrl: './recipe-category-list.component.html',
   styleUrls: ['./recipe-category-list.component.css']
 })
-export class RecipeCategoryListComponent implements OnInit {
+export class RecipeCategoryListComponent implements OnInit, OnDestroy {
   categories: RecipeCategory[];
+  subscribtion: Subscription;
 
-  constructor(private categoryService: RecipeCategoryService) {
+  name: string = 'all';
+
+  constructor(private categoryService: RecipeCategoryService) {}
+
+  ngOnInit() {
+    this.subscribtion = this.categoryService.categoriesChanged
+      .subscribe(
+        (categories: RecipeCategory[]) => {
+          this.categories = categories;
+        }
+      );
     this.categories = this.categoryService.getCategories();
   }
 
-  ngOnInit() {
+  ngOnDestroy(): void {
+    this.subscribtion.unsubscribe();
   }
 
 }

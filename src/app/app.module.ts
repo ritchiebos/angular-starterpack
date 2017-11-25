@@ -22,7 +22,7 @@ import {RecipeService} from './recipes/recipe.service';
 import {RecipesComponent} from './recipes/recipes.component';
 import {RecipeCategoryListComponent} from './recipes/recipe-category-list/recipe-category-list.component';
 import {RecipeCategoryItemComponent} from './recipes/recipe-category-list/recipe-category-item/recipe-category-item.component';
-import {RecipeCategoryService} from './recipes/recipe-category-list/recipe-category.service';
+import { RecipeCategoryService } from './recipes/recipe-category.service';
 
 
 @NgModule({

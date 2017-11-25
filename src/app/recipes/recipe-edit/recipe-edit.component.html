@@ -10,6 +10,7 @@
           <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
         </div>
       </div>
+
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
@@ -22,6 +23,23 @@
           </div>
         </div>
       </div>
+
+      <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+                <label for="category">Category</label><br>
+                <select class="form-control" 
+                  formControlName="categoryId" 
+                  id="categoryId">
+                  <option value="">-Please select-</option>
+                  <option
+                    *ngFor="let category of categories"
+                    [ngValue]="category.id">{{ category.name }}</option>
+                </select>
+            </div>
+          </div>
+        </div>
+
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
