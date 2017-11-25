@@ -14,7 +14,6 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class RecipeDetailComponent implements OnInit, OnDestroy {
   recipe: Recipe;
-  id: string;
 
   subscription: Subscription;
 
@@ -28,8 +27,8 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.subscription = this.route.params
       .subscribe(
         (params: Params) => {
-          this.id = params['id'];
-          this.recipe = this.categoryService.getRecipe(this.id);
+          const id = params['id'];
+          this.recipe = this.categoryService.getRecipe(id);
         }
       )
   }
