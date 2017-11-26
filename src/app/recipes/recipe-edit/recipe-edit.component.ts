@@ -112,6 +112,8 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     } else {
       this.categoryService.updateRecipe(this.currentCatID, this.recipeForm.value);
     }
+
+    this.onCancel();
   }
 
   onCancel() {
