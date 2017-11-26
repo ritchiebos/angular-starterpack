@@ -15,6 +15,7 @@ import { RecipeCategory } from '../recipe-category.model';
   styleUrls: ['./recipe-list.component.css']
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
+  catId: string;
   recipes: Recipe[];
 
   subOne: Subscription;
@@ -30,20 +31,25 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.subOne = this.route.params
       .subscribe(
         (params: Params) => {
-          const categorieId = params['id'];
+          this.catId = params['id'];
 
-          if(!categorieId) {
+          if(!this.catId) {
             this.recipes = this.categoryService.getRecipes();
           } else {
-            this.recipes = this.categoryService.getRecipesOfCategory(categorieId);
+            this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
           }
         }
       );
 
-    this.subTwo = this.categoryService.recipesChanged
+    this.subTwo = this.categoryService.categoriesChanged
       .subscribe(
-        (recipes: Recipe[]) => {
-          this.recipes = recipes;
+        () => {
+          
+          if(!this.catId) {
+            this.recipes = this.categoryService.getRecipes();
+          } else {
+            this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
+          }
         }
       );
   }
