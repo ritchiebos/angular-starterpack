@@ -121,7 +121,7 @@ export class RecipeCategoryService {
       this.categories.find(c => c.id === catId)
         .recipes.splice(indexCat, 1);
 
-      // Push new recipe into categories
+      // Push new recipe into recipes
       this.categories.find(c => c.id === recipe.categoryId )
         .recipes.push(recipe);
 
