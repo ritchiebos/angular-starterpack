@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-xs-12">
+    <button
+      *ngIf="categories"
+      style="cursor: pointer;"
+      [routerLink]="[name]"
+      routerLinkActive="active"
+      class="btn btn default">All</button>
+
+    <app-recipe-category-item
+      *ngFor="let recipeCat of categories"
+      [category]="recipeCat"></app-recipe-category-item>
+  </div>
+</div>
+
+<hr>
