@@ -6,49 +6,11 @@ import { RecipeCategory } from './recipe-category.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Form } from '@angular/forms/src/directives/form_interface';
 import { HttpClient } from '@angular/common/http';
+import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 
 @Injectable()
 export class RecipeCategoryService {
   categoriesChanged = new Subject<RecipeCategory[]>();
-
-  /*
-  categories: RecipeCategory[] = [
-    new RecipeCategory(
-      '1',
-      'Schnitzels',
-      [
-        new Recipe(
-          '1',
-          '1',
-          'Tasty Schnitzel',
-          'A super-tasty Schnitzel - just awesome!',
-          'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
-          [
-            new Ingredient('Meat', 1),
-            new Ingredient('French Fries', 20)
-          ]
-        )
-      ]
-    ),
-    new RecipeCategory(
-      '2',
-      'Burgers',
-      [
-        new Recipe(
-          '2',
-          '2',
-          'Big Fat Burger',
-          'What else you need to say?',
-          'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
-          [
-            new Ingredient('Buns', 2),
-            new Ingredient('Meat', 1)
-          ]
-        )
-      ]
-    )
-  ];
-  */
 
   categories: RecipeCategory[] = [];
   recipes: Recipe[] = [];
@@ -81,6 +43,8 @@ export class RecipeCategoryService {
 
         this.extractRecipes();
 
+        // Notify observable
+        this.categoriesChanged.next(this.categories.slice());
       },
       (err) => {
         console.log(err);
