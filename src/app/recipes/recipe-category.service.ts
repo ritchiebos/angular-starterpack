@@ -137,7 +137,7 @@ export class RecipeCategoryService {
     const newCategory = this.categories[newCatI];
 
     // Find index of recipe in recipes
-    //const indexRec = this.recipes.findIndex(r => r.id === recipe._id);
+    const indexRec = this.recipes.findIndex(r => r.id === recipe._id);
 
     if(curCatI === newCatI) {
       //Category has not changed
@@ -145,11 +145,13 @@ export class RecipeCategoryService {
       
       currentCategory.recipes[recipeIndex] = recipe;
 
-      ///this.recipes[indexRec] = recipe;
+      this.recipes[indexRec] = new Recipe(recipe._id, catId, recipe.name, recipe.description, recipe.imagePath, recipe.ingredients);
 
       this.putCategory(currentCategory);
     }
     else {
+      console.log();
+
       //Category has changed
       const oldRecipeIndex = currentCategory.recipes.findIndex(r => r._id == recipe._id);
       const oldRecipe = currentCategory.recipes[oldRecipeIndex];
