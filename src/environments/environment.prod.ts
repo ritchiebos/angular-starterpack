@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  remoteUrl: ''
+  remoteUrl: 'https://avans-recipes-server.herokuapp.com/api/v1'
 };
