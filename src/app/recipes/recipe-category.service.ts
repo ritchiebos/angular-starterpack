@@ -170,11 +170,16 @@ export class RecipeCategoryService {
     const currentCategory = this.categories[curCatI];
     const newCategory = this.categories[newCatI];
 
+    // Find index of recipe in recipes
+    //const indexRec = this.recipes.findIndex(r => r.id === recipe._id);
+
     if(curCatI === newCatI) {
       //Category has not changed
       const recipeIndex = currentCategory.recipes.findIndex(r => r._id == recipe._id);
       
       currentCategory.recipes[recipeIndex] = recipe;
+
+      ///this.recipes[indexRec] = recipe;
 
       this.putCategory(currentCategory);
     }
