@@ -5,15 +5,10 @@ import { Subject } from 'rxjs/Subject';
 import { RecipeCategory } from './recipe-category.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Form } from '@angular/forms/src/directives/form_interface';
-import { HttpClient } from '@angular/common/http';
-import 'rxjs/Rx';
 
 @Injectable()
 export class RecipeCategoryService {
   categoriesChanged = new Subject<RecipeCategory[]>();
-  recipesChanged = new Subject<Recipe[]>();
-
-  private apiUrl: string = "http://localhost:3000/api/v1/";
 
   recipes: Recipe[] = [];
   categories: RecipeCategory[] = [
@@ -53,8 +48,7 @@ export class RecipeCategoryService {
     )
   ];
 
-  constructor(private slService: ShoppingListService,
-              private httpClient: HttpClient) { 
+  constructor(private slService: ShoppingListService) { 
     for(let category of this.categories) {
       let recipes = category.recipes;
 
@@ -65,35 +59,7 @@ export class RecipeCategoryService {
   }
 
   getCategories() {
-    this.httpClient.get<RecipeCategory[]>(this.apiUrl + 'categories', {
-      observe: 'body',
-      responseType: 'json'
-    })
-    // .map(
-    //   (recipes) => {
-    //     for (let recipe of recipes) {
-    //       if (!recipe['ingredients']) {
-    //         recipe['ingredients'] = [];
-    //       }
-    //     }
-    //     return recipes;
-    //   }
-    // )
-    .subscribe(
-      (categories: RecipeCategory[]) => {
-        this.categories = categories;
-        this.categoriesChanged.next(this.categories.slice());
-      }
-    );
-
-    console.log( this.categories )
-
     return this.categories.slice();
-  }
-
-  setRecipes(recipes: Recipe[]) {
-    this.recipes = recipes;
-    this.recipesChanged.next(this.recipes.slice());
   }
 
   getCategory(id: string) {

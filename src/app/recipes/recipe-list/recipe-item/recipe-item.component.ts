@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 import { Recipe } from '../../recipe.model';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-item',
@@ -9,8 +10,15 @@ import { Recipe } from '../../recipe.model';
 })
 export class RecipeItemComponent implements OnInit {
   @Input() recipe: Recipe;
-  @Input() index: number;
+
+  id: string;
+  name: string;
+
+  constructor() {}
 
   ngOnInit() {
+    this.id = this.recipe.id;
+    this.name = this.recipe.name.toLowerCase()
+      .split(' ').join('-');
   }
 }

@@ -1,9 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Recipe } from '../recipe.model';
 import { RecipeService } from '../recipe.service';
+import { RecipeCategoryService } from '../recipe-category.service';
+import { forEach } from '@angular/router/src/utils/collection';
+import { RecipeCategory } from '../recipe-category.model';
+
 
 @Component({
   selector: 'app-recipe-list',
@@ -11,29 +15,51 @@ import { RecipeService } from '../recipe.service';
   styleUrls: ['./recipe-list.component.css']
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
+  catId: string;
   recipes: Recipe[];
-  subscription: Subscription;
+
+  subOne: Subscription;
+  subTwo: Subscription;
 
   constructor(private recipeService: RecipeService,
+              private categoryService: RecipeCategoryService,
               private router: Router,
               private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.subscription = this.recipeService.recipesChanged
+    this.subOne = this.route.params
       .subscribe(
-        (recipes: Recipe[]) => {
-          this.recipes = recipes;
+        (params: Params) => {
+          this.catId = params['id'];
+
+          if(!this.catId) {
+            this.recipes = this.categoryService.getRecipes();
+          } else {
+            this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
+          }
         }
       );
-    this.recipes = this.recipeService.getRecipes();
+
+    this.subTwo = this.categoryService.categoriesChanged
+      .subscribe(
+        () => {
+          
+          if(!this.catId) {
+            this.recipes = this.categoryService.getRecipes();
+          } else {
+            this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
+          }
+        }
+      );
+  }
+
+  ngOnDestroy() {
+    this.subOne.unsubscribe();
+    this.subTwo.unsubscribe();
   }
 
   onNewRecipe() {
     this.router.navigate(['new'], {relativeTo: this.route});
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }
