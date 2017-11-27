@@ -109,9 +109,6 @@ export class RecipeCategoryService {
 
     // Update to server
     this.putCategory(category);
-
-    // Notify observable
-    this.categoriesChanged.next(this.categories.slice());
   }
 
   private postCategory(category: RecipeCategory) {
@@ -125,6 +122,9 @@ export class RecipeCategoryService {
         //Update category with data received from server
         let originalIndex = this.categories.findIndex(c => c._id == category.id);
         this.categories[originalIndex] = category;
+        
+        // Notify observable
+        this.categoriesChanged.next(this.categories.slice());
       }
     );
   }
@@ -162,9 +162,6 @@ export class RecipeCategoryService {
       newCategory.recipes.push(recipe);
       this.putCategory(newCategory);
     }
-
-    // Notify observable
-    this.categoriesChanged.next(this.categories.slice());
   }
 
   deleteRecipe(recipe: Recipe) {
