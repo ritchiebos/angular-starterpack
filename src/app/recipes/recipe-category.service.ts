@@ -150,8 +150,6 @@ export class RecipeCategoryService {
       this.putCategory(currentCategory);
     }
     else {
-      console.log();
-
       //Category has changed
       const oldRecipeIndex = currentCategory.recipes.findIndex(r => r._id == recipe._id);
       const oldRecipe = currentCategory.recipes[oldRecipeIndex];
