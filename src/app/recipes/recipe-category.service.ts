@@ -96,8 +96,9 @@ export class RecipeCategoryService {
   }
 
   addRecipe(recipe: Recipe) {
-    // Generate random ID in Recipe Model
-    recipe.id = Math.floor(Math.random() * 101 + 1).toString();
+
+    // Unset recipe _id attribute
+    recipe._id = undefined;
     
     // Push into categories
     let category = this.categories.find(c => c.id === recipe.categoryId)
@@ -129,41 +130,6 @@ export class RecipeCategoryService {
   }
 
   updateRecipe(catId: string, recipe: Recipe) {
-    /*
-    const curCatI = this.categories.findIndex(c => c.id === catId);
-    const newCatI = this.categories.findIndex(c => c.id === recipe.categoryId);
-
-    const currentCategory = this.categories[curCatI];
-    const newCategory = this.categories[newCatI];
-
-    // Find index of recipe in categories
-    const indexCat = this.categories.find(c => c.id === catId)
-      .recipes.findIndex(r => r.id === recipe.id);
-    
-    // Find index of recipe in recipes
-    const indexRec = this.recipes.findIndex(r => r.id === recipe.id);
-
-    if(curCatI === newCatI) {
-      // Replace current recipe with new one in categories
-      this.categories.find(c => c.id === catId)
-        .recipes[indexCat] = recipe;
-
-      // Replace current recipe with new one in recipes
-      this.recipes[indexRec] = recipe;
-    } else {
-      // Remove old recipe from categories
-      this.categories.find(c => c.id === catId)
-        .recipes.splice(indexCat, 1);
-
-      // Push new recipe into recipes
-      this.categories.find(c => c.id === recipe.categoryId )
-        .recipes.push(recipe);
-
-      // Replace current recipe with new one in recipes
-      this.recipes[indexRec] = recipe;
-    }
-    */
-
     const curCatI = this.categories.findIndex(c => c.id === catId);
     const newCatI = this.categories.findIndex(c => c.id === recipe.categoryId);
 
@@ -185,11 +151,11 @@ export class RecipeCategoryService {
     }
     else {
       //Category has changed
-      const recipeIndex = currentCategory.recipes.findIndex(r => r._id == recipe._id);
-      const recipe = currentCategory.recipes[recipeIndex];
+      const oldRecipeIndex = currentCategory.recipes.findIndex(r => r._id == recipe._id);
+      const oldRecipe = currentCategory.recipes[oldRecipeIndex];
 
       //Remove from old category
-      currentCategory.recipes.splice(recipeIndex, 1);
+      currentCategory.recipes.splice(oldRecipeIndex, 1);
       this.putCategory(currentCategory);
 
       //Add to new category
@@ -202,21 +168,6 @@ export class RecipeCategoryService {
   }
 
   deleteRecipe(recipe: Recipe) {
-    /*
-    // Find index of recipe in categories
-    const indexCat = this.categories.find(c => c.id === recipe.categoryId).
-      recipes.findIndex(r => r.id === recipe.id);
-    
-    // Find index of recipe in recipes
-    const indexRec = this.recipes.findIndex(r => r.id === recipe.id)
-
-    // Remove recipe from categories
-    this.categories.find(c => c.id === recipe.categoryId)
-      .recipes.splice(indexCat, 1);
-
-    // Remove recipe from recipes
-    this.recipes.splice(indexRec, 1);
-    */
 
     let category = this.categories.find(c => c.id == recipe.categoryId);
     
