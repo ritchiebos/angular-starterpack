@@ -21,7 +21,7 @@ export class RecipeCategoryService {
     this.fetchData();
   }
 
-  fetchData() {
+  private fetchData() {
     this.httpClient.get<RecipeCategory[]>(this.url + '/categories', {
       observe: 'body',
       responseType: 'json'
@@ -54,6 +54,9 @@ export class RecipeCategoryService {
 
   //Create a flat array of recipe objects
   private extractRecipes(){
+
+    this.recipes = [];
+
     for(let category of this.categories) {
       let recipes = category.recipes;
 
@@ -90,22 +93,44 @@ export class RecipeCategoryService {
 
   addRecipe(recipe: Recipe) {
     // Generate random ID in Recipe Model
-    recipe.id = Math.floor(Math.random() * 101 + 1).toString();  
+    recipe.id = Math.floor(Math.random() * 101 + 1).toString();
     
     // Push into categories
-    this.categories.find(c => c.id === recipe.categoryId)
-      .recipes.push(recipe);
+    let category = this.categories.find(c => c.id === recipe.categoryId)
+    category.recipes.push(recipe);
     
     // Push into recipes
     this.recipes.push(recipe);
+
+    // Update to server
+    this.putCategory(category);
 
     // Notify observable
     this.categoriesChanged.next(this.categories.slice());
   }
 
+  private postCategory(category: RecipeCategory) {
+    this.httpClient.post(this.url + '/categories', category);
+  }
+
+  private putCategory(category: RecipeCategory) {
+    this.httpClient.put(this.url + '/categories/' + category.id, category)
+    .subscribe(
+      (category : RecipeCategory) => {
+        //Update category with data received from server
+        let originalIndex = this.categories.findIndex(c => c._id == category.id);
+        this.categories[originalIndex] = category;
+      }
+    );
+  }
+
   updateRecipe(catId: string, recipe: Recipe) {
-    const curCat = this.categories.findIndex(c => c.id === catId);
-    const newCat = this.categories.findIndex(c => c.id === recipe.categoryId);
+    /*
+    const curCatI = this.categories.findIndex(c => c.id === catId);
+    const newCatI = this.categories.findIndex(c => c.id === recipe.categoryId);
+
+    const currentCategory = this.categories[curCatI];
+    const newCategory = this.categories[newCatI];
 
     // Find index of recipe in categories
     const indexCat = this.categories.find(c => c.id === catId)
@@ -114,7 +139,7 @@ export class RecipeCategoryService {
     // Find index of recipe in recipes
     const indexRec = this.recipes.findIndex(r => r.id === recipe.id);
 
-    if(curCat === newCat) {
+    if(curCatI === newCatI) {
       // Replace current recipe with new one in categories
       this.categories.find(c => c.id === catId)
         .recipes[indexCat] = recipe;
@@ -133,12 +158,41 @@ export class RecipeCategoryService {
       // Replace current recipe with new one in recipes
       this.recipes[indexRec] = recipe;
     }
+    */
+
+    const curCatI = this.categories.findIndex(c => c.id === catId);
+    const newCatI = this.categories.findIndex(c => c.id === recipe.categoryId);
+
+    const currentCategory = this.categories[curCatI];
+    const newCategory = this.categories[newCatI];
+
+    if(curCatI === newCatI) {
+      //Category has not changed
+      const recipeIndex = currentCategory.recipes.findIndex(r => r._id == recipe._id);
+      currentCategory.recipes[recipeIndex] = recipe;
+
+      this.putCategory(currentCategory);
+    }
+    else {
+      //Category has changed
+      const recipeIndex = currentCategory.recipes.findIndex(r => r._id == recipe._id);
+      const recipe = currentCategory.recipes[recipeIndex];
+
+      //Remove from old category
+      currentCategory.recipes.splice(recipeIndex, 1);
+      this.putCategory(currentCategory);
+
+      //Add to new category
+      newCategory.recipes.push(recipe);
+      this.putCategory(newCategory);
+    }
 
     // Notify observable
     this.categoriesChanged.next(this.categories.slice());
   }
 
   deleteRecipe(recipe: Recipe) {
+    /*
     // Find index of recipe in categories
     const indexCat = this.categories.find(c => c.id === recipe.categoryId).
       recipes.findIndex(r => r.id === recipe.id);
@@ -152,6 +206,16 @@ export class RecipeCategoryService {
 
     // Remove recipe from recipes
     this.recipes.splice(indexRec, 1);
+    */
+
+    let category = this.categories.find(c => c.id == recipe.categoryId);
+    
+    //Get index of recipe
+    let recipeIndex = category.recipes.findIndex(r => r.id == recipe.id);
+
+    category.recipes.splice(recipeIndex, 1);
+
+    this.putCategory(category);
 
     // Notify observable
     this.categoriesChanged.next(this.categories.slice());
