@@ -11,7 +11,6 @@ import { HttpClient } from '@angular/common/http';
 export class RecipeCategoryService {
   categoriesChanged = new Subject<RecipeCategory[]>();
 
-  recipes: Recipe[] = [];
   /*
   categories: RecipeCategory[] = [
     new RecipeCategory(
@@ -52,20 +51,11 @@ export class RecipeCategoryService {
   */
 
   categories: RecipeCategory[] = [];
+  recipes: Recipe[] = [];
 
   url: string = 'http://localhost:3000/api/v1';
 
   constructor(private slService: ShoppingListService, private httpClient: HttpClient) { 
-    /*
-    for(let category of this.categories) {
-      let recipes = category.recipes;
-
-      for(let recipe of recipes) {
-        this.recipes.push(recipe);
-      }
-    }
-    */
-
     this.fetchData();
   }
 
@@ -88,11 +78,25 @@ export class RecipeCategoryService {
 
           this.categories.push(new RecipeCategory(category._id, category.name, recipes))
         }
+
+        this.extractRecipes();
+
       },
       (err) => {
         console.log(err);
       }
     );
+  }
+
+  //Create a flat array of recipe objects
+  private extractRecipes(){
+    for(let category of this.categories) {
+      let recipes = category.recipes;
+
+      for(let recipe of recipes) {
+        this.recipes.push(recipe);
+      }
+    }
   }
 
   getCategories() {
