@@ -5,12 +5,14 @@ import { Subject } from 'rxjs/Subject';
 import { RecipeCategory } from './recipe-category.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Form } from '@angular/forms/src/directives/form_interface';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class RecipeCategoryService {
   categoriesChanged = new Subject<RecipeCategory[]>();
 
   recipes: Recipe[] = [];
+  /*
   categories: RecipeCategory[] = [
     new RecipeCategory(
       '1',
@@ -47,8 +49,14 @@ export class RecipeCategoryService {
       ]
     )
   ];
+  */
 
-  constructor(private slService: ShoppingListService) { 
+  categories: RecipeCategory[] = [];
+
+  url: string = 'http://localhost:3000/api/v1';
+
+  constructor(private slService: ShoppingListService, private httpClient: HttpClient) { 
+    /*
     for(let category of this.categories) {
       let recipes = category.recipes;
 
@@ -56,6 +64,24 @@ export class RecipeCategoryService {
         this.recipes.push(recipe);
       }
     }
+    */
+
+    this.fetchData();
+  }
+
+  fetchData() {
+    this.httpClient.get<RecipeCategory[]>(this.url + '/categories', {
+      observe: 'body',
+      responseType: 'json'
+    })
+    .subscribe(
+      (categories) => {
+        this.categories = categories;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   getCategories() {
