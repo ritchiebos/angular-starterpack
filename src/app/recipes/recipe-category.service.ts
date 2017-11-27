@@ -75,8 +75,19 @@ export class RecipeCategoryService {
       responseType: 'json'
     })
     .subscribe(
-      (categories) => {
-        this.categories = categories;
+      (categories: RecipeCategory[]) => {
+
+        //Convert category objects to actual instances of the Category class
+        for(let category of categories){
+
+          //Convert recipe objects to actual instances of the Recipe class
+          let recipes: Recipe[] = [];
+          for(let recipe of category.recipes){
+            recipes.push(new Recipe(recipe._id, category._id, recipe.name, recipe.description, recipe.imagePath, recipe.ingredients));
+          }
+
+          this.categories.push(new RecipeCategory(category._id, category.name, recipes))
+        }
       },
       (err) => {
         console.log(err);
