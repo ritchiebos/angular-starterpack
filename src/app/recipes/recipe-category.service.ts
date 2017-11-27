@@ -7,6 +7,7 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Form } from '@angular/forms/src/directives/form_interface';
 import { HttpClient } from '@angular/common/http';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class RecipeCategoryService {
@@ -15,9 +16,12 @@ export class RecipeCategoryService {
   categories: RecipeCategory[] = [];
   recipes: Recipe[] = [];
 
-  url: string = 'http://localhost:3000/api/v1';
+  url: string;
 
-  constructor(private slService: ShoppingListService, private httpClient: HttpClient) { 
+  constructor(private slService: ShoppingListService, private httpClient: HttpClient) {
+
+    this.url = environment.remoteUrl;
+
     this.fetchData();
   }
 
