@@ -10,14 +10,14 @@ import { RecipeCategory } from '../../recipe-category.model';
 export class RecipeCategoryItemComponent implements OnInit {
   @Input() category: RecipeCategory;
   @Input() index: number;
-  
+
   id: string;
   name: string;
 
   constructor() { }
 
   ngOnInit() {
-    this.id = this.category.id;
+    this.id = this.category._id;
     this.name = this.category.name.toLowerCase();
   }
 
