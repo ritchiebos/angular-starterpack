@@ -20,7 +20,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   editMode = false;
 
   subscription: Subscription;
-  categories: RecipeCategory[];
+  categories: RecipeCategory[] = null;
 
   recipeForm: FormGroup;
 
@@ -34,11 +34,14 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     this.subscription = this.route.params
       .subscribe(
         (params: Params) => {
-          this.recipeId = params['id'];
-          this.editMode = params['id'] != null;
-          this.categories = this.categoryService.getCategories();
-
-          this.initForm();
+          try {
+            this.recipeId = params['id'];
+            this.editMode = params['id'] != null;
+            this.categories = this.categoryService.getCategories();
+            this.initForm();
+          } catch(e) {
+            this.onReload();
+          }
         }
       );
   }
@@ -109,11 +112,11 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   onSave() {
     if (!this.editMode) {
       this.categoryService.addRecipe(this.recipeForm.value);
+      this.onReload();
     } else {
       this.categoryService.updateRecipe(this.currentCatID, this.recipeForm.value);
+      this.onCancel();
     }
-
-    this.onCancel();
   }
 
   onCancel() {
@@ -122,5 +125,9 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     } else {
       this.router.navigate(['../../../'], {relativeTo: this.route});
     }
+  }
+
+  onReload() {
+    this.router.navigate(['/recipes']);
   }
 }

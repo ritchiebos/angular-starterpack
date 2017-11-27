@@ -27,8 +27,12 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.subscription = this.route.params
       .subscribe(
         (params: Params) => {
-          const id = params['id'];
-          this.recipe = this.categoryService.getRecipe(id);
+          try {
+            const id = params['id'];
+            this.recipe = this.categoryService.getRecipe(id);
+          } catch(e) {
+            this.onReload();
+          }
         }
       )
   }
@@ -50,4 +54,7 @@ export class RecipeDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/recipes']);
   }
 
+  onReload() {
+    this.router.navigate(['/recipes']);
+  }
 }

@@ -96,7 +96,6 @@ export class RecipeCategoryService {
   }
 
   addRecipe(recipe: Recipe) {
-
     // Unset recipe _id attribute
     recipe._id = undefined;
     
@@ -105,10 +104,16 @@ export class RecipeCategoryService {
     category.recipes.push(recipe);
     
     // Push into recipes
-    this.recipes.push(recipe);
+    //this.recipes.push(recipe);
 
     // Update to server
     this.putCategory(category);
+
+    // Clear categories 
+    this.categories = [];
+
+    // Insert new data
+    this.fetchData();
   }
 
   private postCategory(category: RecipeCategory) {
@@ -167,15 +172,16 @@ export class RecipeCategoryService {
   deleteRecipe(recipe: Recipe) {
 
     let category = this.categories.find(c => c.id == recipe.categoryId);
+
+    // Find index of recipe in recipes
+    const indexRec = this.recipes.findIndex(r => r.id === recipe._id);
     
     //Get index of recipe
     let recipeIndex = category.recipes.findIndex(r => r.id == recipe.id);
 
     category.recipes.splice(recipeIndex, 1);
+    this.recipes.splice(indexRec, 1);
 
     this.putCategory(category);
-
-    // Notify observable
-    this.categoriesChanged.next(this.categories.slice());
   }
 }

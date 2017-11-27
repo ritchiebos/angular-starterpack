@@ -32,11 +32,15 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       .subscribe(
         (params: Params) => {
           this.catId = params['id'];
-
-          if(!this.catId) {
-            this.recipes = this.categoryService.getRecipes();
-          } else {
-            this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
+          
+          try {
+            if(!this.catId) {
+              this.recipes = this.categoryService.getRecipes();
+            } else {
+              this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
+            }
+          } catch(e) {
+            this.onReload();
           }
         }
       );
@@ -45,10 +49,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       .subscribe(
         () => {
           
-          if(!this.catId) {
-            this.recipes = this.categoryService.getRecipes();
-          } else {
-            this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
+          try {
+            if(!this.catId) {
+              this.recipes = this.categoryService.getRecipes();
+            } else {
+              this.recipes = this.categoryService.getRecipesOfCategory(this.catId);
+            }
+          } catch(e) {
+            this.onReload();
           }
         }
       );
@@ -61,5 +69,9 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   onNewRecipe() {
     this.router.navigate(['new'], {relativeTo: this.route});
+  }
+
+  onReload() {
+    this.router.navigate(['/recipes']);
   }
 }
