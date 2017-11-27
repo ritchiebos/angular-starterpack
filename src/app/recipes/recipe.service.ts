@@ -7,8 +7,6 @@ import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { HttpClient } from '@angular/common/http';
 import 'rxjs/Rx';
 
-
-
 @Injectable()
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();

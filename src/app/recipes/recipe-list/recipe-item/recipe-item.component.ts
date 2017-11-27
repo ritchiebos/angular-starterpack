@@ -17,7 +17,7 @@ export class RecipeItemComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {
-    this.id = this.recipe.id;
+    this.id = this.recipe._id;
     this.name = this.recipe.name.toLowerCase()
       .split(' ').join('-');
   }
